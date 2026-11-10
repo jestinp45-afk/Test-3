@@ -1,0 +1,140 @@
+name: Build Transformer Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-android:
+    name: Build Transformer APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Download repository source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+
+      # 3. Set up Java for Android
+      
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+          
+
+      # 4. Verify project files
+      - name: Verify project files
+        run: |
+          test -f package.json || {
+            echo "ERROR: package.json is missing"
+            exit 1
+          }
+
+          test -f package-lock.json || {
+            echo "ERROR: package-lock.json is missing"
+            exit 1
+          }
+
+          test -f capacitor.config.json || {
+            echo "ERROR: capacitor.config.json is missing"
+            exit 1
+          }
+
+      # 5. Create Firebase environment configuration
+      - name: Configure Firebase
+        env:
+          FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+        run: |
+          set -e
+
+          : "${FIREBASE_API_KEY:?Missing VITE_FIREBASE_API_KEY secret}"
+          : "${FIREBASE_AUTH_DOMAIN:?Missing VITE_FIREBASE_AUTH_DOMAIN secret}"
+          : "${FIREBASE_PROJECT_ID:?Missing VITE_FIREBASE_PROJECT_ID secret}"
+          : "${FIREBASE_STORAGE_BUCKET:?Missing VITE_FIREBASE_STORAGE_BUCKET secret}"
+          : "${FIREBASE_MESSAGING_SENDER_ID:?Missing VITE_FIREBASE_MESSAGING_SENDER_ID secret}"
+          : "${FIREBASE_APP_ID:?Missing VITE_FIREBASE_APP_ID secret}"
+
+          {
+            echo "VITE_FIREBASE_API_KEY=$FIREBASE_API_KEY"
+            echo "VITE_FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN"
+            echo "VITE_FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID"
+            echo "VITE_FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET"
+            echo "VITE_FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID"
+            echo "VITE_FIREBASE_APP_ID=$FIREBASE_APP_ID"
+          } > .env.production
+
+      # 6. Install exact dependencies from lockfile
+      - name: Install dependencies
+        run: |
+          rm -f package-lock.json
+          npm install --no-audit --no-fund
+
+      # 7. Verify Capacitor Android dependency
+      - name: Verify Android dependency
+        run: |
+          npm ls @capacitor/core @capacitor/android
+
+      # 8. Build React application
+      - name: Build web application
+        run: npm run build
+
+      # 9. Add Android platform only if missing
+      - name: Add Android platform if missing
+        run: |
+          if [ ! -d android ]; then
+            echo "Android platform not found. Creating it..."
+            npx cap add android
+          else
+            echo "Android platform already exists. Preserving it."
+          fi
+
+      # 10. Synchronize Capacitor
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      # 11. Verify Android project
+      - name: Verify Android project
+        run: |
+          test -f android/gradlew || {
+            echo "ERROR: Android Gradle wrapper is missing"
+            exit 1
+          }
+
+          test -d android/app || {
+            echo "ERROR: Android app directory is missing"
+            exit 1
+          }
+
+      # 12. Build debug APK
+      - name: Build Android APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      # 13. Upload APK artifact
+      - name: Upload Transformer APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Transformer-Android-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 1
