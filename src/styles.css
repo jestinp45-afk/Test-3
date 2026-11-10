@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root { font-family: 'DM Sans', sans-serif; color: #17211e; background: #f6f0e3; font-synthesis: none; text-rendering: optimizeLegibility; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input, textarea, select { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* Secure account experience — branded with the official Transformer artwork. */
+.auth-shell{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at top,#245647 0%,#102c24 48%,#071510 100%);color:#f8f3e8;font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}
+.auth-card{width:min(100%,430px);padding:28px 26px;border:1px solid rgba(213,173,89,.55);border-radius:26px;background:rgba(5,19,14,.88);box-shadow:0 24px 80px rgba(0,0,0,.35)}
+.auth-brand{text-align:center;margin-bottom:24px}.auth-brand img{display:block;width:min(100%,230px);aspect-ratio:1;object-fit:contain;border-radius:22px;margin:0 auto 14px;filter:drop-shadow(0 8px 22px rgba(0,0,0,.35))}.auth-brand p{font-size:12px;color:#d8c69a;line-height:1.5;margin:0}.auth-card h1{text-align:center;font-size:25px;font-weight:750;letter-spacing:-.03em;margin:0 0 8px;color:#fff8e8}.auth-subtitle{text-align:center;color:#c9d7ce;font-size:13px;line-height:1.55;margin:0 0 24px}.auth-form{display:flex;flex-direction:column;gap:9px}.auth-form label{font-size:12px;font-weight:700;color:#e8d9b6;margin-top:5px}.auth-input{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 13px;border:1px solid #486657;border-radius:12px;background:#0d241b;color:#d5ad59}.auth-input input{width:100%;min-width:0;background:transparent;border:0;outline:none;color:#fff;font-size:14px}.auth-input input::placeholder{color:#8ca196}.auth-eye{display:flex;align-items:center;color:#c6d5cb;background:none;border:0;padding:5px}.auth-submit{margin-top:12px;min-height:48px;border:1px solid #f0d38b;border-radius:12px;background:linear-gradient(135deg,#e5c36e,#bd8b32);color:#10251b;font-weight:800;font-size:14px}.auth-submit:disabled{opacity:.65}.auth-links{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:18px}.auth-links button{background:none;border:0;color:#e7c975;font-size:12px;font-weight:650}.auth-error,.auth-success{padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.5}.auth-error{background:#4b1d20;color:#ffd9d9}.auth-success{background:#183d2d;color:#d3f6dc}.auth-privacy,.auth-hint{display:flex;align-items:center;justify-content:center;gap:6px;color:#9fb3a5;font-size:10px;line-height:1.6;text-align:center;margin:22px 0 0}.auth-hint{display:block;overflow-wrap:anywhere}.auth-spinner{display:block;margin:24px auto 12px;animation:auth-spin 1s linear infinite;color:#d5ad59}@keyframes auth-spin{to{transform:rotate(360deg)}}
