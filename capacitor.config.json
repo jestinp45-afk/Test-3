@@ -1,0 +1,6 @@
+{
+  "appId": "com.transformer.app",
+  "appName": "Transformer",
+  "webDir": "dist",
+  "android": { "allowMixedContent": false }
+}

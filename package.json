@@ -1,0 +1,35 @@
+{
+  "name": "transformer-christian-lifestyle-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "cap:sync": "cap sync android",
+    "cap:add:android": "cap add android",
+    "android:open": "cap open android",
+    "android:setup": "cap add android",
+    "android:sync": "cap sync android",
+    "android:debug": "npm run build && cap sync android && cd android && ./gradlew assembleDebug",
+    "android:release": "npm run build && cap sync android && cd android && ./gradlew bundleRelease"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "autoprefixer": "10.4.20",
+    "lucide-react": "0.468.0",
+    "postcss": "8.4.49",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tailwindcss": "3.4.16",
+    "vite": "6.0.7",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/local-notifications": "^6.1.0",
+    "firebase": "~11.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0"
+  }
+}
